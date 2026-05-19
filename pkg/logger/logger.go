@@ -28,8 +28,12 @@ type Field struct {
 }
 
 func New(cfg *Config) (Logger, error) {
-	var zapConfig zapcore.EncoderConfig
-
+	zapConfig := zapcore.EncoderConfig{
+		TimeKey:    "time",
+		LevelKey:   "level",
+		CallerKey:  "row",
+		MessageKey: "message",
+	}
 	switch cfg.Format {
 	case JSONFormat:
 		zapConfig = zap.NewProductionEncoderConfig()
