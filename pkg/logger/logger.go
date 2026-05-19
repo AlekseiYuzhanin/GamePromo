@@ -23,17 +23,12 @@ type loggerZap struct {
 }
 
 type Field struct {
-	key   string
-	value interface{}
+	Key   string
+	Value interface{}
 }
 
 func New(cfg *Config) (Logger, error) {
-	zapConfig := zapcore.EncoderConfig{
-		TimeKey:    "time",
-		LevelKey:   "level",
-		CallerKey:  "row",
-		MessageKey: "message",
-	}
+	var zapConfig zapcore.EncoderConfig
 	switch cfg.Format {
 	case JSONFormat:
 		zapConfig = zap.NewProductionEncoderConfig()
@@ -42,6 +37,11 @@ func New(cfg *Config) (Logger, error) {
 	}
 	zapConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.RFC3339)
 	zapConfig.EncodeLevel = zapcore.CapitalLevelEncoder
+	zapConfig.TimeKey = "time"
+	zapConfig.LevelKey = "level"
+	zapConfig.MessageKey = "message"
+	zapConfig.CallerKey = "row"
+
 	var writer zapcore.WriteSyncer
 	if cfg.OutputPath == "" {
 		writer = zapcore.AddSync(os.Stdout)
@@ -86,7 +86,7 @@ func (l *loggerZap) Sync() error {
 func toZapFields(fields []Field) []zap.Field {
 	zapFields := make([]zap.Field, len(fields))
 	for i, field := range fields {
-		zapFields[i] = zap.Any(field.key, field.value)
+		zapFields[i] = zap.Any(field.Key, field.Value)
 	}
 	return zapFields
 }
