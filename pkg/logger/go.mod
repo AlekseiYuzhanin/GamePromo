@@ -1,4 +1,4 @@
-module github.com/AlekseiYuzhanin/GamePromo/logger
+module github.com/AlekseiYuzhanin225/GamePromo/logger
 
 go 1.26
 
