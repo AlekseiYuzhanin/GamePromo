@@ -1,0 +1,76 @@
+version: '3'
+services:
+  analyticsService:
+    build: analyticsSVC
+    networks:
+      - gamePromo
+
+
+  apiGateway:
+    build: apiGateway
+    networks:
+      - gamePromo
+
+  authService:
+    build: authService
+    networks:
+      - gamePromo
+
+  itemsService:
+    build:
+      context: .
+      dockerfile: itemsSvc/Dockerfile
+    environment:
+      DB_USER: ${ITEMSSERIVCE_DB_USER}
+      DB_PASSWORD: ${ITEMSSERIVCE_DB_PASSWORD}
+      DB_HOST: ${ITEMSSERIVCE_DB_HOST}
+      DB_PORT: ${ITEMSSERIVCE_DB_PORT}
+      DB_NAME: ${ITEMSSERIVCE_DB_NAME}
+    depends_on:
+      - itemsService-db
+    networks:
+      - gamePromo
+
+  itemsService-db:
+    image: postgres:17
+    environment:
+      DB_USER: ${ITEMSSERIVCE_DB_USER}
+      DB_PASSWORD: ${ITEMSSERIVCE_DB_PASSWORD}
+      DB_HOST: ${ITEMSSERIVCE_DB_HOST}
+      DB_PORT: ${ITEMSSERIVCE_DB_PORT}
+      DB_NAME: ${ITEMSSERIVCE_DB_NAME}
+    networks:
+      - gamePromo
+    healthcheck:
+      test: ["CMD_SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  randomGeneratorService:
+    build: randomGeneratorSVC
+    networks:
+      - gamePromo
+
+  rewardDispatcher:
+    build: rewardDispatcher
+    networks:
+      - gamePromo
+
+  userProgressService:
+    build: userProgressSVC
+    networks:
+      - gamePromo
+
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - gamePromo
+    restart: always
+
+networks:
+  gamePromo:
+    driver: bridge
