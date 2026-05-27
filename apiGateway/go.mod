@@ -1,3 +1,3 @@
-module github.com/AlekseiYuzhanin225/GamePromo/apiGateway
+module github.com/AlekseiYuzhanin/GamePromo/apiGateway
 
 go 1.26

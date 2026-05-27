@@ -1,3 +1,3 @@
-module github.com/AlekseiYuzhanin225/GamePromo/analyticsSVC
+module github.com/AlekseiYuzhanin/GamePromo/analyticsSVC
 
 go 1.26

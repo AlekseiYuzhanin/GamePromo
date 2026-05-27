@@ -16,36 +16,39 @@ services:
     networks:
       - gamePromo
 
-  itemsService:
+  items_service:
     build:
       context: .
       dockerfile: itemsSvc/Dockerfile
     environment:
-      DB_USER: ${ITEMSSERIVCE_DB_USER}
-      DB_PASSWORD: ${ITEMSSERIVCE_DB_PASSWORD}
-      DB_HOST: ${ITEMSSERIVCE_DB_HOST}
-      DB_PORT: ${ITEMSSERIVCE_DB_PORT}
-      DB_NAME: ${ITEMSSERIVCE_DB_NAME}
+      DB_USER: ${ITEMS_SERVICE_DB_USER:-postgres}
+      DB_PASSWORD: ${ITEMS_SERVICE_DB_PASSWORD:-postgres}
+      DB_NAME: ${ITEMS_SERVICE_DB_NAME:-postgres}
+      DB_HOST: ${ITEMS_SERVICE_DB_HOST:-items_service_db}
+      DB_PORT: ${ITEMS_SERVICE_DB_PORT:-5432}
     depends_on:
-      - itemsService-db
+      - items_service_db
     networks:
       - gamePromo
 
-  itemsService-db:
+  items_service_db:
     image: postgres:17
     environment:
-      DB_USER: ${ITEMSSERIVCE_DB_USER}
-      DB_PASSWORD: ${ITEMSSERIVCE_DB_PASSWORD}
-      DB_HOST: ${ITEMSSERIVCE_DB_HOST}
-      DB_PORT: ${ITEMSSERIVCE_DB_PORT}
-      DB_NAME: ${ITEMSSERIVCE_DB_NAME}
+      POSTGRES_USER: ${ITEMS_SERVICE_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${ITEMS_SERVICE_DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${ITEMS_SERVICE_DB_NAME:-postgres}
+    ports:
+      - ${ITEMS_SERVICE_DB_PORT:-5432}:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${ITEMS_SERVICE_DB_USER:-postgres} -d ${ITEMS_SERVICE_DB_NAME:-postgres}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - items_service_db_data:/var/lib/postgresql/data
     networks:
       - gamePromo
-    healthcheck:
-      test: ["CMD_SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 10s
-      timeout: 3s
-      retries: 10
+
 
   randomGeneratorService:
     build: randomGeneratorSVC
@@ -70,6 +73,9 @@ services:
     networks:
       - gamePromo
     restart: always
+
+volumes:
+  items_service_db_data:
 
 networks:
   gamePromo:
