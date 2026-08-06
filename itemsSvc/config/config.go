@@ -9,7 +9,9 @@ import (
 )
 
 type Config struct {
-	Database DbConfig `yaml:"database" env:"DATABASE"`
+	Database   DbConfig         `yaml:"database" env:"DATABASE"`
+	GrpcClient GRPCClientConfig `yaml:"grpc_client_config" env:"GRPC_CLIENT_CONFIG"`
+	GrpcServer GRPCServerConfig `yaml:"grpc_server_config" env:"GRPC_SERVER_CONFIG"`
 }
 
 type DbConfig struct {
@@ -19,6 +21,16 @@ type DbConfig struct {
 	Host     string `yaml:"host" env:"ITEMS_SERVICE_DB_HOST" env-default:"127.0.0.1"`
 	Port     string `yaml:"port" env:"ITEMS_SERVICE_DB_PORT" env-default:"5432"`
 	SslMode  string `yaml:"ssl_mode" env:"ITEMS_SERVICE_SSL_MODE" env-default:"disable"`
+}
+
+type GRPCClientConfig struct {
+	Ip   string `yaml:"grpc_client_ip" env:"GRPC_CLIENT_IP" env-default:"localhost"`
+	Port string `yaml:"grpc_client_ip" env:"GRPC_CLIENT_PORT" env-default:"50051"`
+}
+
+type GRPCServerConfig struct {
+	Ip   string `yaml:"grpc_server_ip" env:"GRPC_SERVER_IP" env-default:"localhost"`
+	Port string `yaml:"grpc_server_ip" env:"GRPC_SERVER_PORT" env-default:"50052"`
 }
 
 func New(path string) *Config {

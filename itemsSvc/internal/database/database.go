@@ -6,6 +6,7 @@ import (
 
 	"github.com/AlekseiYuzhanin/GamePromo/itemsSvc/config"
 	_ "github.com/lib/pq"
+	goose "github.com/pressly/goose/v3"
 )
 
 type Database struct {
@@ -20,11 +21,25 @@ func New(cfg *config.Config) (*Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
 		return nil, err
 	}
+	if err = goose.SetDialect("postgres"); err != nil {
+		return nil, err
+	}
+
+	if err = goose.Up(db, "./migrations"); err != nil {
+		return nil, err
+	}
 	return &Database{db: db}, nil
+}
+
+func (d *Database) Close() error {
+	err := goose.Down(d.db, "./migrations")
+	if err != nil {
+		return err
+	}
+	return d.db.Close()
 }

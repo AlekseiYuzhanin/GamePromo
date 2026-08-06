@@ -11,6 +11,8 @@ Random Generator Svc — ядро на math/rand/v2 или crypto/rand + рас�
 
 Reward Dispatcher — асинхронно начисляет награду через брокер (NATS/Kafka).
 
+Items - создание и обработка слотов
+
 Analytics Svc — собирает метрики (Win rate, RTP, срабатывание гарантов).
 
 Фишки Go: sync.Pool для экономии памяти, atomic для счётчиков, context.WithTimeout для RPC.
