@@ -25,12 +25,12 @@ type DbConfig struct {
 
 type GRPCClientConfig struct {
 	Ip   string `yaml:"grpc_client_ip" env:"GRPC_CLIENT_IP" env-default:"localhost"`
-	Port string `yaml:"grpc_client_ip" env:"GRPC_CLIENT_PORT" env-default:"50051"`
+	Port string `yaml:"grpc_client_ip" env:"GRPC_CLIENT_PORT" env-default:"54251"`
 }
 
 type GRPCServerConfig struct {
 	Ip   string `yaml:"grpc_server_ip" env:"GRPC_SERVER_IP" env-default:"localhost"`
-	Port string `yaml:"grpc_server_ip" env:"GRPC_SERVER_PORT" env-default:"50052"`
+	Port string `yaml:"grpc_server_ip" env:"GRPC_SERVER_PORT" env-default:"54252"`
 }
 
 func New(path string) *Config {

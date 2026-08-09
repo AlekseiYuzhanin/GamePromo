@@ -9,6 +9,7 @@ import (
 	grpcclient "github.com/AlekseiYuzhanin/GamePromo/itemsSvc/internal/api/grpc/client"
 	grpcserver "github.com/AlekseiYuzhanin/GamePromo/itemsSvc/internal/api/grpc/server"
 	"github.com/AlekseiYuzhanin/GamePromo/itemsSvc/internal/database"
+	"github.com/AlekseiYuzhanin/GamePromo/itemsSvc/internal/repository"
 	logger "github.com/AlekseiYuzhanin/GamePromoLogger"
 )
 
@@ -18,7 +19,7 @@ func MustRun() error {
 		return err
 	}
 	log.Info("message", logger.Field{Key: "Test message", Value: "msg"})
-	cfg := config.New("../.env")
+	cfg := config.New("../../.env")
 	db, err := database.New(cfg)
 	if err != nil {
 		return err
@@ -29,7 +30,8 @@ func MustRun() error {
 	if err != nil {
 		return err
 	}
-	srv, err := grpcserver.New(cfg, log)
+	itemsRepository := repository.NewItemsRepository(log, db)
+	srv, err := grpcserver.New(cfg, log, itemsRepository)
 	if err != nil {
 		return err
 	}

@@ -1,2 +1,44 @@
 syntax="proto3";
 
+package GamePromo;
+
+option go_package="github.com/AlekseiYuzhanin/GamePromo";
+
+service ItemsService {
+  rpc CreateItem(Item) returns (Item) {};
+  rpc CreateItems(Items) returns (Items) {};
+  rpc UpdateItem(UpdateItemRequest) returns (Item) {};
+  rpc UpdateItems(UpdateItemsRequest) returns (Items) {};
+}
+
+message UpdateItemRequest {
+  string id = 1;
+  optional string title = 2;
+  optional string type = 3;
+  optional string rarity = 4;
+}
+
+message UpdateItemsRequest {
+  repeated UpdateItemRequest ids = 1;
+}
+
+message Item {
+   string title = 1;
+   ItemType type = 2;
+   Rarity rarity = 3;
+}
+
+message ItemType {
+  string title = 1;
+}
+
+message Rarity {
+  string title = 1;
+  float weight = 2;
+  float multiplier = 3;
+  string color = 4;
+}
+
+message Items {
+  repeated Item items = 1;
+}
